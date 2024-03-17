@@ -30,7 +30,7 @@ async def github_callback(ci: str = Query(default=None), cs: str = Query(default
             client_secret=cs,
             code=code
         )
-        return JSONResponse({"details":{{"status": "200", "msg": "Success","access_token": token["access_token"]}}})
+        return {"detail":{"status": "200", "msg": "Success","access_token": token["access_token"]}}
     except Exception as e:
         raise HTTPException(status_code=401, detail={"status": "401", "msg": "Error","error": str(e)})
     
