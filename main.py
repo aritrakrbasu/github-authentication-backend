@@ -24,9 +24,13 @@ async def github_callback(ci: str = Query(default=None), cs: str = Query(default
     if not code:
         raise HTTPException(status_code=400, detail={"status": "400", "msg": "Missing code","key_missing":"code"})
     github = OAuth2Session(client_id=ci,  redirect_uri=ruri)
-    token = github.fetch_token(
-        token_url="https://github.com/login/oauth/access_token",
-        client_secret=cs,
-        code=code
-    )
-    return JSONResponse({"status": "200", "msg": "Success","access_token": token["access_token"]})
+    try:
+        token = github.fetch_token(
+            token_url="https://github.com/login/oauth/access_token",
+            client_secret=cs,
+            code=code
+        )
+        return JSONResponse({"details":{{"status": "200", "msg": "Success","access_token": token["access_token"]}}})
+    except Exception as e:
+        raise HTTPException(status_code=401, detail={"status": "401", "msg": "Error","error": str(e)})
+    
